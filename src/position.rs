@@ -49,3 +49,31 @@ impl Position {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::test::*;
+    use Square::*;
+
+    #[test]
+    fn sets_custom_position() {
+        let position = Position::from_position(map! {
+            E1 => Piece::WhiteKing,
+            A2 => Piece::WhitePawn,
+            B2 => Piece::WhitePawn,
+            E8 => Piece::BlackKing
+        });
+
+        verify_bitboard(&position, Bitboard::WhiteKing, vec![E1]);
+        verify_bitboard(&position, Bitboard::WhitePawns, vec![A2, B2]);
+        verify_bitboard(&position, Bitboard::WhitePieces, vec![E1, A2, B2]);
+        verify_bitboard(&position, Bitboard::BlackKing, vec![E8]);
+        verify_bitboard(&position, Bitboard::BlackPieces, vec![E8]);
+    }
+
+    #[test]
+    fn gets_side_index() {
+        assert_eq!(Position::get_side_index(Piece::WhiteKing), Bitboard::WhitePieces as usize);
+        assert_eq!(Position::get_side_index(Piece::BlackKing), Bitboard::BlackPieces as usize);
+    }
+}
