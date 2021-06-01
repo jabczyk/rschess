@@ -17,25 +17,28 @@ pub enum Bitboard {
     BlackPawns,
     WhitePieces,
     BlackPieces,
+    AllPieces,
 }
 
 pub struct Position {
-    pub bitboards: [u64; 14],
+    pub bitboards: [u64; 15],
 }
 
 impl Position {
     pub fn default() -> Self {
-        Self { bitboards: [0; 14] }
+        Self { bitboards: [0; 15] }
     }
 
     pub fn from_position(position: HashMap<Square, Piece>) -> Self {
-        let mut bitboards = [0; 14];
+        let mut bitboards = [0; 15];
 
         for (square, piece) in position {
             set_bit(&mut bitboards[piece as usize], square as u8);
 
             let side_index = Self::get_side_index(piece);
             set_bit(&mut bitboards[side_index], square as u8);
+
+            set_bit(&mut bitboards[Bitboard::AllPieces as usize], square as u8);
         }
 
         Self { bitboards }
@@ -69,6 +72,7 @@ mod tests {
         verify_bitboard(&position, Bitboard::WhitePieces, vec![E1, A2, B2]);
         verify_bitboard(&position, Bitboard::BlackKing, vec![E8]);
         verify_bitboard(&position, Bitboard::BlackPieces, vec![E8]);
+        verify_bitboard(&position, Bitboard::AllPieces, vec![E1, A2, B2, E8]);
     }
 
     #[test]
