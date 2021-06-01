@@ -1,0 +1,6 @@
+pub const A_FILE: u64 = 72340172838076673;
+pub const B_FILE: u64 = 144680345676153346;
+pub const AB_FILE: u64 = A_FILE | B_FILE;
+pub const G_FILE: u64 = 4629771061636907072;
+pub const H_FILE: u64 = 9259542123273814144;
+pub const GH_FILE: u64 = G_FILE | H_FILE;
