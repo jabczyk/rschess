@@ -67,12 +67,12 @@ mod tests {
             E8 => Piece::BlackKing
         });
 
-        verify_bitboard(&position, Bitboard::WhiteKing, vec![E1]);
-        verify_bitboard(&position, Bitboard::WhitePawns, vec![A2, B2]);
-        verify_bitboard(&position, Bitboard::WhitePieces, vec![E1, A2, B2]);
-        verify_bitboard(&position, Bitboard::BlackKing, vec![E8]);
-        verify_bitboard(&position, Bitboard::BlackPieces, vec![E8]);
-        verify_bitboard(&position, Bitboard::AllPieces, vec![E1, A2, B2, E8]);
+        verify_pos_bitboard(&position, Bitboard::WhiteKing, vec![E1]);
+        verify_pos_bitboard(&position, Bitboard::WhitePawns, vec![A2, B2]);
+        verify_pos_bitboard(&position, Bitboard::WhitePieces, vec![E1, A2, B2]);
+        verify_pos_bitboard(&position, Bitboard::BlackKing, vec![E8]);
+        verify_pos_bitboard(&position, Bitboard::BlackPieces, vec![E8]);
+        verify_pos_bitboard(&position, Bitboard::AllPieces, vec![E1, A2, B2, E8]);
     }
 
     #[test]
