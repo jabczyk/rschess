@@ -27,3 +27,33 @@ pub fn get_knight_attacks_table() -> [u64; 64] {
 
     table
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::enums::Square::*;
+    use crate::test::*;
+
+    mod get_attacks {
+        use super::*;
+
+        #[test]
+        fn generates_attacks() {
+            verify_bitboard(get_knight_attacks(F3 as u8), vec![E5, G5, D4, H4, D2, H2, E1, G1]);
+            verify_bitboard(get_knight_attacks(C6 as u8), vec![B8, D8, A7, E7, A5, E5, B4, D4]);
+        }
+
+        #[test]
+        fn valid_edges() {
+            verify_bitboard(get_knight_attacks(A6 as u8), vec![B8, C7, C5, B4]);
+            verify_bitboard(get_knight_attacks(B6 as u8), vec![A8, C8, D7, D5, A4, C4]);
+            verify_bitboard(get_knight_attacks(H3 as u8), vec![G5, F4, F2, G1]);
+            verify_bitboard(get_knight_attacks(G3 as u8), vec![F5, H5, E4, E2, F1, H1]);
+        }
+
+        #[test]
+        fn generates_table() {
+            verify_bitboard(get_knight_attacks(F3 as u8), vec![E5, G5, D4, H4, D2, H2, E1, G1]);
+        }
+    }
+}
