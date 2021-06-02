@@ -3,33 +3,18 @@ use crate::constants::{A_FILE, H_FILE};
 use crate::enums::Side;
 
 pub fn get_pawn_attacks(side: Side, square: u8) -> u64 {
+    let mut attacks: u64 = 0;
     let mut pawn: u64 = 0;
     set_bit(&mut pawn, square);
 
-    let mut attacks: u64 = 0;
-
     match side {
         Side::White => {
-            let attack = pawn >> 8 - 1;
-            if attack & !A_FILE != 0 {
-                attacks |= attack
-            };
-
-            let attack = pawn >> 8 + 1;
-            if attack & !H_FILE != 0 {
-                attacks |= attack
-            };
+            attacks |= pawn >> (8 - 1) & !A_FILE;
+            attacks |= pawn >> (8 + 1) & !H_FILE;
         }
         Side::Black => {
-            let attack = pawn << 8 - 1;
-            if attack & !H_FILE != 0 {
-                attacks |= attack
-            };
-
-            let attack = pawn << 8 + 1;
-            if attack & !A_FILE != 0 {
-                attacks |= attack
-            };
+            attacks |= pawn << (8 - 1) & !H_FILE;
+            attacks |= pawn << (8 + 1) & !A_FILE;
         }
     };
 
@@ -78,13 +63,13 @@ mod tests {
             verify_bitboard(get_pawn_attacks(Side::Black, A1 as u8), vec![]);
             verify_bitboard(get_pawn_attacks(Side::Black, H1 as u8), vec![]);
         }
-    }
 
-    #[test]
-    fn generates_table() {
-        let table = get_pawn_attacks_table();
+        #[test]
+        fn generates_table() {
+            let table = get_pawn_attacks_table();
 
-        verify_bitboard(table[Side::White as usize][E4 as usize], vec![D5, F5]);
-        verify_bitboard(table[Side::Black as usize][E5 as usize], vec![D4, F4]);
+            verify_bitboard(table[Side::White as usize][E4 as usize], vec![D5, F5]);
+            verify_bitboard(table[Side::Black as usize][E5 as usize], vec![D4, F4]);
+        }
     }
 }
