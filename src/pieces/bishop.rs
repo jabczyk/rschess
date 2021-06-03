@@ -26,3 +26,29 @@ pub fn get_bishop_occupancy(square: u8) -> u64 {
 
     bitboard
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::enums::Square::*;
+    use crate::test::*;
+
+    mod get_occupancy {
+        use super::*;
+
+        #[test]
+        fn generates_occupacy() {
+            verify_bitboard(
+                get_bishop_occupancy(E4 as u8),
+                vec![B7, C6, G6, D5, F5, D3, F3, C2, G2],
+            );
+            verify_bitboard(get_bishop_occupancy(B3 as u8), vec![F7, E6, D5, C4, C2]);
+        }
+
+        #[test]
+        fn valid_edges() {
+            verify_bitboard(get_bishop_occupancy(A4 as u8), vec![D7, C6, B5, B3, C2]);
+            assert_eq!(get_bishop_occupancy(H1 as u8), get_bishop_occupancy(A8 as u8));
+        }
+    }
+}
