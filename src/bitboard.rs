@@ -16,8 +16,14 @@ pub fn del_bit(bitboard: &mut u64, square: u8) {
 }
 
 #[inline]
-pub fn square(rank: u8, file: u8) -> u8 {
+pub fn sq(rank: u8, file: u8) -> u8 {
     rank * 8 + file
+}
+
+#[inline]
+pub fn coords(square: u8) -> (u8, u8) {
+    // (rank, file)
+    (square / 8, square % 8)
 }
 
 pub fn print_bitboard(bitboard: u64) {
@@ -26,7 +32,7 @@ pub fn print_bitboard(bitboard: u64) {
         print!("{} ", 8 - rank);
 
         for file in 0..8 {
-            print!(" {}", if get_bit(bitboard, square(rank, file)) == 0 { 0 } else { 1 });
+            print!(" {}", if get_bit(bitboard, sq(rank, file)) == 0 { '.' } else { '#' });
         }
 
         println!();
@@ -67,8 +73,15 @@ mod tests {
 
     #[test]
     fn returns_square_index() {
-        assert_eq!(square(1, 0), 8);
-        assert_eq!(square(1, 2), 10);
-        assert_eq!(square(0, 7), 7);
+        assert_eq!(sq(1, 0), 8);
+        assert_eq!(sq(1, 2), 10);
+        assert_eq!(sq(0, 7), 7);
+    }
+
+    #[test]
+    fn gets_square_coords() {
+        assert_eq!(coords(sq(1, 0)), (1, 0));
+        assert_eq!(coords(sq(1, 2)), (1, 2));
+        assert_eq!(coords(sq(0, 7)), (0, 7));
     }
 }
