@@ -1,3 +1,5 @@
+#![feature(stmt_expr_attributes)]
+
 pub mod bitboard;
 pub mod constants;
 pub mod enums;

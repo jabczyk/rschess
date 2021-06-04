@@ -6,6 +6,29 @@ use crate::bitboard::*;
 //
 // https://www.chessprogramming.org/Magic_Bitboards#How_it_works
 pub fn get_bishop_occupancy(square: u8) -> u64 {
+    #[rustfmt::skip]
+    get_bishop_moves(
+        square,
+        0,
+        &|dir: i8, val: i8| if dir == 1 { val < 8 - 1 } else { val >= 1 }
+    )
+}
+
+// Generates a bitmap of all possible bishop attacks, taking blocking
+// pieces into account
+// It is used to seed the attacks bitboard database
+pub fn get_bishop_attacks(square: u8, blockers: u64) -> u64 {
+    #[rustfmt::skip]
+    get_bishop_moves(
+        square,
+        blockers,
+        &|dir: i8, val: i8| if dir == 1 { val < 8 } else { val >= 0 }
+    )
+}
+
+// Generates a bitmap of all possible bishop (diagonal) moves,
+// taking blocking pieces and coordinate bounds into account
+fn get_bishop_moves(square: u8, blockers: u64, in_bounds: &dyn Fn(i8, i8) -> bool) -> u64 {
     let (b_rank, b_file) = coords(square);
     let mut bitboard: u64 = 0;
 
@@ -14,10 +37,13 @@ pub fn get_bishop_occupancy(square: u8) -> u64 {
         let mut rank = b_rank as i8 + dir_rank;
         let mut file = b_file as i8 + dir_file;
 
-        let in_bounds = |dir: i8, val: i8| if dir == 1 { val < 8 - 1 } else { val >= 1 };
-
         while in_bounds(*dir_rank, rank) && in_bounds(*dir_file, file) {
-            set_bit(&mut bitboard, sq(rank as u8, file as u8));
+            let attack_square = sq(rank as u8, file as u8);
+            set_bit(&mut bitboard, attack_square);
+
+            if get_bit(blockers, attack_square) != 0 {
+                break;
+            };
 
             rank += dir_rank;
             file += dir_file;
