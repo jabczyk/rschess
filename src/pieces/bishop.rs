@@ -77,4 +77,31 @@ mod tests {
             assert_eq!(get_bishop_occupancy(H1 as u8), get_bishop_occupancy(A8 as u8));
         }
     }
+
+    mod get_attacks {
+        use super::*;
+
+        #[test]
+        fn generates_attacks() {
+            verify_bitboard(
+                get_bishop_attacks(D4 as u8, 0),
+                vec![H8, A7, G7, B6, F6, C5, E5, C3, E3, B2, F2, A1, G1],
+            );
+        }
+
+        #[test]
+        fn valid_edges() {
+            verify_bitboard(get_bishop_attacks(A4 as u8, 0), vec![E8, D7, C6, B5, B3, C2, D1]);
+        }
+
+        #[test]
+        fn handles_blockers() {
+            let blockers = bitboard_with(vec![F6, A7, B2, F2]);
+
+            verify_bitboard(
+                get_bishop_attacks(D4 as u8, blockers),
+                vec![A7, B6, F6, C5, E5, C3, E3, B2, F2],
+            );
+        }
+    }
 }

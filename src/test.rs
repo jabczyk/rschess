@@ -1,7 +1,7 @@
 use crate::enums::Square;
 use crate::position::{Bitboard, Position};
 
-fn bitboard_with(squares: Vec<Square>) -> u64 {
+pub fn bitboard_with(squares: Vec<Square>) -> u64 {
     squares.iter().fold(0, |bitboard, square| bitboard + (1u64 << square.to_owned() as u64))
 }
 
