@@ -3,8 +3,7 @@ use crate::constants::{AB_FILE, A_FILE, GH_FILE, H_FILE};
 
 pub fn get_knight_attacks(square: u8) -> u64 {
     let mut attacks: u64 = 0;
-    let mut knight: u64 = 0;
-    set_bit(&mut knight, square);
+    let knight = bit_from_sq(square);
 
     attacks |= knight >> (2 * 8 + 1) & !H_FILE;
     attacks |= knight >> (2 * 8 - 1) & !A_FILE;

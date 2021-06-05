@@ -14,7 +14,7 @@ pub fn get_bishop_occupancy(square: u8) -> u64 {
     )
 }
 
-// Generates a bitmap of all possible bishop attacks, taking blocking
+// Generates a bitboard all possible bishop attacks, taking blocking
 // pieces into account
 // It is used to seed the attacks bitboard database
 pub fn get_bishop_attacks(square: u8, blockers: u64) -> u64 {
@@ -26,7 +26,7 @@ pub fn get_bishop_attacks(square: u8, blockers: u64) -> u64 {
     )
 }
 
-// Generates a bitmap of all possible bishop (diagonal) moves,
+// Generates a bitboard of all possible bishop (diagonal) moves,
 // taking blocking pieces and coordinate bounds into account
 fn get_bishop_moves(square: u8, blockers: u64, in_bounds: &dyn Fn(i8, i8) -> bool) -> u64 {
     let (b_rank, b_file) = coords(square);

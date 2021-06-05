@@ -1,6 +1,6 @@
 #[inline]
 pub fn get_bit(bitboard: u64, square: u8) -> u64 {
-    bitboard & (1u64 << square)
+    bitboard & bit_from_sq(square)
 }
 
 #[inline]
@@ -24,6 +24,11 @@ pub fn sq(rank: u8, file: u8) -> u8 {
 pub fn coords(square: u8) -> (u8, u8) {
     // (rank, file)
     (square / 8, square % 8)
+}
+
+#[inline]
+pub fn bit_from_sq(square: u8) -> u64 {
+    1 << square
 }
 
 pub fn print_bitboard(bitboard: u64) {
@@ -83,5 +88,12 @@ mod tests {
         assert_eq!(coords(sq(1, 0)), (1, 0));
         assert_eq!(coords(sq(1, 2)), (1, 2));
         assert_eq!(coords(sq(0, 7)), (0, 7));
+    }
+
+    #[test]
+    fn gets_bit_from_square() {
+        assert_eq!(bit_from_sq(0), 1);
+        assert_eq!(bit_from_sq(5), u64::pow(2, 5));
+        assert_eq!(bit_from_sq(63), u64::pow(2, 63));
     }
 }

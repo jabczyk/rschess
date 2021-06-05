@@ -4,8 +4,7 @@ use crate::enums::Side;
 
 pub fn get_pawn_attacks(side: Side, square: u8) -> u64 {
     let mut attacks: u64 = 0;
-    let mut pawn: u64 = 0;
-    set_bit(&mut pawn, square);
+    let pawn = bit_from_sq(square);
 
     match side {
         Side::White => {

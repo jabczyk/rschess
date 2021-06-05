@@ -8,8 +8,7 @@ use crate::enums::Axis;
 // https://www.chessprogramming.org/Magic_Bitboards#How_it_works
 pub fn get_rook_occupancy(square: u8) -> u64 {
     let (rank, file) = coords(square);
-    let mut rook: u64 = 0;
-    set_bit(&mut rook, square);
+    let rook = bit_from_sq(square);
 
     let rank_moves = get_rook_moves(Axis::Rank, file, 1..(8 - 1), 0);
     let file_moves = get_rook_moves(Axis::File, rank, 1..(8 - 1), 0);
