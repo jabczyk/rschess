@@ -33,6 +33,11 @@ pub enum Side {
     Black,
 }
 
+pub enum Axis {
+    Rank,
+    File,
+}
+
 impl From<Piece> for Side {
     fn from(piece: Piece) -> Self {
         match piece {

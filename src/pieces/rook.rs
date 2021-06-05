@@ -1,4 +1,5 @@
 use crate::bitboard::*;
+use crate::enums::Axis;
 
 // Creates relevant rook occupancy to use as a magic bitboard key
 // Returns a bitboard with all possible rook moves, on an empty board,
@@ -6,23 +7,45 @@ use crate::bitboard::*;
 //
 // https://www.chessprogramming.org/Magic_Bitboards#How_it_works
 pub fn get_rook_occupancy(square: u8) -> u64 {
-    let (r_rank, r_file) = coords(square);
+    let (rank, file) = coords(square);
+    let mut rook: u64 = 0;
+    set_bit(&mut rook, square);
+
+    let rank_moves = get_rook_moves(Axis::Rank, file, 1..(8 - 1), 0);
+    let file_moves = get_rook_moves(Axis::File, rank, 1..(8 - 1), 0);
+
+    (rank_moves | file_moves) & !rook
+}
+
+// Generates a bitboard of all possible rook attacks, taking blocking
+// pieces into account
+// It is used to seed the attacks bitboard database
+pub fn get_rook_attacks(square: u8, blockers: u64) -> u64 {
+    let (rank, file) = coords(square);
+
+    get_rook_moves(Axis::Rank, file, (rank + 1)..8, blockers)
+        | get_rook_moves(Axis::Rank, file, (0..rank).rev(), blockers)
+        | get_rook_moves(Axis::File, rank, (file + 1)..8, blockers)
+        | get_rook_moves(Axis::File, rank, (0..file).rev(), blockers)
+}
+
+// Creates a bitboard of all possible rook attacks on a certain axis,
+// taking blocking pieces and coordinate ranges into account
+fn get_rook_moves<R>(axis: Axis, static_coord: u8, range: R, blockers: u64) -> u64
+where
+    R: Iterator<Item = u8>,
+{
     let mut bitboard: u64 = 0;
 
-    for rank in (r_rank + 1)..(8 - 1) {
-        set_bit(&mut bitboard, sq(rank, r_file));
-    }
-
-    for rank in 1..r_rank {
-        set_bit(&mut bitboard, sq(rank, r_file));
-    }
-
-    for file in (r_file + 1)..(8 - 1) {
-        set_bit(&mut bitboard, sq(r_rank, file));
-    }
-
-    for file in 1..r_file {
-        set_bit(&mut bitboard, sq(r_rank, file));
+    for coord in range {
+        let attack_square = match axis {
+            Axis::Rank => sq(coord, static_coord),
+            Axis::File => sq(static_coord, coord),
+        };
+        set_bit(&mut bitboard, attack_square);
+        if get_bit(blockers, attack_square) != 0 {
+            break;
+        };
     }
 
     bitboard
