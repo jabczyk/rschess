@@ -31,6 +31,15 @@ pub fn bit_from_sq(square: u8) -> u64 {
     1 << square
 }
 
+// Gets an index of the least significant 1st bit of a bitboard
+//
+// https://www.chessprogramming.org/BitScan
+#[inline]
+pub fn get_ls1b_index(bitboard: u64) -> u8 {
+    assert_ne!(bitboard, 0);
+    bitboard.trailing_zeros() as u8
+}
+
 pub fn print_bitboard(bitboard: u64) {
     println!("   a b c d e f g h");
     for rank in 0..8 {
@@ -48,6 +57,7 @@ pub fn print_bitboard(bitboard: u64) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::enums::Square::*;
 
     #[test]
     fn gets_bit() {
@@ -95,5 +105,18 @@ mod tests {
         assert_eq!(bit_from_sq(0), 1);
         assert_eq!(bit_from_sq(5), u64::pow(2, 5));
         assert_eq!(bit_from_sq(63), u64::pow(2, 63));
+    }
+
+    #[test]
+    fn gets_ls1b_index() {
+        assert_eq!(get_ls1b_index(bit_from_sq(A1 as u8)), A1 as u8);
+        assert_eq!(get_ls1b_index(bit_from_sq(E4 as u8)), E4 as u8);
+        assert_eq!(get_ls1b_index(bit_from_sq(H8 as u8)), H8 as u8);
+    }
+
+    #[test]
+    #[should_panic]
+    fn get_ls1b_panics_on_empty_board() {
+        get_ls1b_index(0);
     }
 }
