@@ -1,5 +1,5 @@
 use crate::bitboard::set_bit;
-use crate::enums::{Piece, Side, Square};
+use crate::enums::{CastlingRights, Piece, Side, Square};
 use std::collections::HashMap;
 
 pub enum Bitboard {
@@ -22,11 +22,23 @@ pub enum Bitboard {
 
 pub struct Position {
     pub bitboards: [u64; 15],
+    pub en_passant_square: Square,
+    pub castling_rights: CastlingRights,
+    pub side_to_move: Side,
+    pub fifty_move_count: u16,
+    pub halfmove_count: u16,
 }
 
 impl Position {
     pub fn default() -> Self {
-        Self { bitboards: [0; 15] }
+        Self {
+            bitboards: [0; 15],
+            en_passant_square: Square::NoSquare,
+            castling_rights: 0b1111,
+            side_to_move: Side::White,
+            fifty_move_count: 0,
+            halfmove_count: 0,
+        }
     }
 
     pub fn from_position(position: HashMap<Square, Piece>) -> Self {
@@ -41,7 +53,16 @@ impl Position {
             set_bit(&mut bitboards[Bitboard::AllPieces as usize], square as u8);
         }
 
-        Self { bitboards }
+        // TODO: initialize en passant square and castling rights
+
+        Self {
+            bitboards,
+            en_passant_square: Square::NoSquare,
+            castling_rights: 0b1111,
+            side_to_move: Side::White,
+            fifty_move_count: 0,
+            halfmove_count: 0,
+        }
     }
 
     fn get_side_index(piece: Piece) -> usize {

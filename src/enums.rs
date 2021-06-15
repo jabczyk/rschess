@@ -9,6 +9,7 @@ pub enum Square {
   A3, B3, C3, D3, E3, F3, G3, H3,
   A2, B2, C2, D2, E2, F2, G2, H2,
   A1, B1, C1, D1, E1, F1, G1, H1,
+  NoSquare
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -50,4 +51,16 @@ impl From<Piece> for Side {
             _ => Self::Black,
         }
     }
+}
+
+// Castling rights are represented by a 4 bit unsigned integer
+// Each bit represents a single castling right
+//
+// https://www.chessprogramming.org/Castling_Rights
+pub type CastlingRights = u8;
+pub enum Castling {
+    WhiteKingSide = 1,
+    WhiteQueenSide = 2,
+    BlackKingSide = 4,
+    BlackQueenSide = 8,
 }
