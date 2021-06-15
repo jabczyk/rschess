@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[rustfmt::skip]
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum Square {
@@ -34,6 +36,12 @@ pub enum Side {
     Black,
 }
 
+impl fmt::Display for Side {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 pub enum Axis {
     Rank,
     File,
@@ -59,8 +67,8 @@ impl From<Piece> for Side {
 // https://www.chessprogramming.org/Castling_Rights
 pub type CastlingRights = u8;
 pub enum Castling {
-    WhiteKingSide = 1,
-    WhiteQueenSide = 2,
-    BlackKingSide = 4,
-    BlackQueenSide = 8,
+    WK = 1,
+    WQ = 2,
+    BK = 4,
+    BQ = 8,
 }
