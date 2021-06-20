@@ -1,11 +1,12 @@
 #![feature(stmt_expr_attributes)]
 
 pub mod bitboard;
+mod cli;
 pub mod constants;
 pub mod enums;
+mod fen;
 pub mod game;
 mod macros;
-mod cli;
 pub mod pieces;
 pub mod position;
 

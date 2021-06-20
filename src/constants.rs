@@ -18,3 +18,6 @@ pub const AB_FILE: u64 = A_FILE | B_FILE;
 pub const G_FILE: u64 = 4629771061636907072;
 pub const H_FILE: u64 = 9259542123273814144;
 pub const GH_FILE: u64 = G_FILE | H_FILE;
+
+pub const EMPTY_FEN: &str = "8/8/8/8/8/8/8/8 w - - ";
+pub const STARTING_FEN: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
