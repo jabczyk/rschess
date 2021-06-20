@@ -1,20 +1,24 @@
 use crate::{
     bitboard::*,
-    enums::{Side, Square},
+    enums::{Castling, CastlingRights, Side, Square},
     position::{Bitboard, Position},
 };
 
 impl Position {
+    // Creates a position from [FEN] string
+    //
+    // [FEN]: https://www.chessprogramming.org/Forsyth-Edwards_Notation
     pub fn from_fen(fen: &str) -> Self {
         let fen_parts: Vec<&str> = fen.split_whitespace().collect();
+        assert_eq!(fen_parts.len(), 6);
 
         Self {
             bitboards: place_pieces(fen_parts[0]),
             en_passant_square: Square::NoSquare,
-            castling_rights: 0b1111,
-            side_to_move: Side::White,
-            fifty_move_count: 0,
-            halfmove_count: 0,
+            castling_rights: get_castling_rights(fen_parts[2]),
+            side_to_move: fen_parts[1].into(),
+            fifty_move_count: fen_parts[4].parse().unwrap(),
+            halfmove_count: get_halfmoves(fen_parts[5].parse().unwrap(), fen_parts[1].into()),
         }
     }
 }
@@ -59,4 +63,25 @@ fn place_pieces(placement: &str) -> [u64; 15] {
         bitboards[Bitboard::WhitePieces as usize] | bitboards[Bitboard::BlackPieces as usize];
 
     bitboards
+}
+
+// Parses FEN castling rights string (like "KQkq"), returns castling right integer
+fn get_castling_rights(rights_str: &str) -> CastlingRights {
+    let mut rights = 0;
+
+    for c in rights_str.chars() {
+        match c {
+            'K' => rights |= Castling::WK as u8,
+            'Q' => rights |= Castling::WQ as u8,
+            'k' => rights |= Castling::BK as u8,
+            'q' => rights |= Castling::BQ as u8,
+            _ => break,
+        }
+    }
+
+    rights
+}
+
+fn get_halfmoves(full_moves: u16, side_to_move: Side) -> u16 {
+    (full_moves * 2) + if side_to_move == Side::Black { 1 } else { 0 }
 }

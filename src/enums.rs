@@ -30,7 +30,7 @@ pub enum Piece {
     BlackPawn,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Side {
     White,
     Black,
@@ -39,6 +39,15 @@ pub enum Side {
 impl fmt::Display for Side {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+
+impl From<&str> for Side {
+    fn from(s: &str) -> Side {
+        match s {
+            "b" => Side::Black,
+            _ => Side::White,
+        }
     }
 }
 
