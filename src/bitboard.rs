@@ -31,6 +31,15 @@ pub fn bit_from_sq(square: u8) -> u64 {
     1 << square
 }
 
+pub fn sum_bitboards(slice: &[u64]) -> u64 {
+    let mut sum = 0;
+    for bitboard in slice {
+        sum |= bitboard
+    }
+
+    sum
+}
+
 // Gets an index of the least significant 1st bit of a bitboard
 //
 // https://www.chessprogramming.org/BitScan
@@ -118,5 +127,11 @@ mod tests {
     #[should_panic]
     fn get_ls1b_panics_on_empty_board() {
         get_ls1b_index(0);
+    }
+
+    #[test]
+    fn sums_bitboards() {
+        assert_eq!(sum_bitboards(&[0b1100, 0b0100, 0b1]), 0b1101);
+        assert_eq!(sum_bitboards(&[0b1010101, 0b1110100, 0b0]), 0b1110101);
     }
 }
