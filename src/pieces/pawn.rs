@@ -1,6 +1,6 @@
 use crate::bitboard::*;
 use crate::constants::{A_FILE, H_FILE};
-use crate::enums::Side;
+use crate::defs::Side;
 
 pub fn get_pawn_attacks(side: Side, square: u8) -> u64 {
     let mut attacks: u64 = 0;
@@ -34,7 +34,7 @@ pub fn get_pawn_attacks_table() -> [[u64; 64]; 2] {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::Square::*;
+    use crate::defs::Square::*;
     use crate::test::*;
 
     mod get_attacks {

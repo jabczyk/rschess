@@ -56,7 +56,7 @@ fn get_bishop_moves(square: u8, blockers: u64, in_bounds: &dyn Fn(i8, i8) -> boo
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::Square::*;
+    use crate::defs::Square::*;
     use crate::test::*;
 
     mod get_occupancy {

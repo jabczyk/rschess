@@ -30,7 +30,7 @@ pub fn get_knight_attacks_table() -> [u64; 64] {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::Square::*;
+    use crate::defs::Square::*;
     use crate::test::*;
 
     mod get_attacks {

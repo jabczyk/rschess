@@ -1,8 +1,8 @@
 use crate::{
     bitboard::*,
     constants::HUMAN_SQUARES,
-    enums::{Castling, CastlingRights, Side, Square},
-    position::{Bitboard, Position},
+    defs::{Bitboard, Castling, CastlingRights, Side, Square},
+    position::Position,
 };
 
 impl Position {
@@ -35,24 +35,24 @@ fn place_pieces(placement: &str) -> [u64; 15] {
     let (mut rank, mut file) = (0u8, 0u8);
 
     for c in placement.chars() {
-        let mut set_piece = |board: Bitboard| {
-            set_bit(&mut bitboards[board as usize], sq(rank, file));
+        let mut set_piece = |board_index: usize| {
+            set_bit(&mut bitboards[board_index], sq(rank, file));
             file += 1;
         };
 
         match c {
-            'K' => set_piece(Bitboard::WhiteKing),
-            'Q' => set_piece(Bitboard::WhiteQueens),
-            'R' => set_piece(Bitboard::WhiteRooks),
-            'B' => set_piece(Bitboard::WhiteBishops),
-            'N' => set_piece(Bitboard::WhiteKnights),
-            'P' => set_piece(Bitboard::WhitePawns),
-            'k' => set_piece(Bitboard::BlackKing),
-            'q' => set_piece(Bitboard::BlackQueens),
-            'r' => set_piece(Bitboard::BlackRooks),
-            'b' => set_piece(Bitboard::BlackBishops),
-            'n' => set_piece(Bitboard::BlackKnights),
-            'p' => set_piece(Bitboard::BlackPawns),
+            'K' => set_piece(Bitboard::WHITE_KING),
+            'Q' => set_piece(Bitboard::WHITE_QUEENS),
+            'R' => set_piece(Bitboard::WHITE_ROOKS),
+            'B' => set_piece(Bitboard::WHITE_BISHOPS),
+            'N' => set_piece(Bitboard::WHITE_KNIGHTS),
+            'P' => set_piece(Bitboard::WHITE_PAWNS),
+            'k' => set_piece(Bitboard::BLACK_KING),
+            'q' => set_piece(Bitboard::BLACK_QUEENS),
+            'r' => set_piece(Bitboard::BLACK_ROOKS),
+            'b' => set_piece(Bitboard::BLACK_BISHOPS),
+            'n' => set_piece(Bitboard::BLACK_KNIGHTS),
+            'p' => set_piece(Bitboard::BLACK_PAWNS),
             '1'..='8' => file += c as u8 - 0x30,
             '/' => {
                 rank += 1;
@@ -62,10 +62,10 @@ fn place_pieces(placement: &str) -> [u64; 15] {
         }
     }
 
-    bitboards[Bitboard::WhitePieces as usize] = sum_bitboards(&bitboards[0..6]);
-    bitboards[Bitboard::BlackPieces as usize] = sum_bitboards(&bitboards[6..12]);
-    bitboards[Bitboard::AllPieces as usize] =
-        bitboards[Bitboard::WhitePieces as usize] | bitboards[Bitboard::BlackPieces as usize];
+    bitboards[Bitboard::WHITE_PIECES] = sum_bitboards(&bitboards[0..6]);
+    bitboards[Bitboard::BLACK_PIECES] = sum_bitboards(&bitboards[6..12]);
+    bitboards[Bitboard::ALL_PIECES] =
+        bitboards[Bitboard::WHITE_PIECES] | bitboards[Bitboard::BLACK_PIECES];
 
     bitboards
 }
@@ -76,10 +76,10 @@ fn get_castling_rights(rights_str: &str) -> CastlingRights {
 
     for c in rights_str.chars() {
         match c {
-            'K' => rights |= Castling::WK as u8,
-            'Q' => rights |= Castling::WQ as u8,
-            'k' => rights |= Castling::BK as u8,
-            'q' => rights |= Castling::BQ as u8,
+            'K' => rights |= Castling::WK,
+            'Q' => rights |= Castling::WQ,
+            'k' => rights |= Castling::BK,
+            'q' => rights |= Castling::BQ,
             _ => break,
         }
     }
@@ -110,9 +110,8 @@ fn get_halfmoves(full_moves: u16, side_to_move: Side) -> u16 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::Piece::*;
+    use crate::defs::Piece::*;
     use crate::map;
-    use Castling::*;
     use Square::*;
 
     #[test]
@@ -126,9 +125,12 @@ mod tests {
     #[test]
     fn gets_castling_rights() {
         assert_eq!(get_castling_rights("-"), 0);
-        assert_eq!(get_castling_rights("KQkq"), WK as u8 | WQ as u8 | BK as u8 | BQ as u8);
-        assert_eq!(get_castling_rights("Qkq"), WQ as u8 | BK as u8 | BQ as u8);
-        assert_eq!(get_castling_rights("Kk"), WK as u8 | BK as u8);
+        assert_eq!(
+            get_castling_rights("KQkq"),
+            Castling::WK | Castling::WQ | Castling::BK | Castling::BQ
+        );
+        assert_eq!(get_castling_rights("Qkq"), Castling::WQ | Castling::BK | Castling::BQ);
+        assert_eq!(get_castling_rights("Kk"), Castling::WK | Castling::BK);
     }
 
     #[test]
@@ -190,7 +192,7 @@ mod tests {
             Position {
                 bitboards,
                 en_passant_square: get_square_id("c3"),
-                castling_rights: WK as u8,
+                castling_rights: Castling::WK,
                 side_to_move: Side::Black,
                 fifty_move_count: 1,
                 halfmove_count: 55

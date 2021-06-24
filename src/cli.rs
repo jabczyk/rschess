@@ -1,7 +1,7 @@
 use crate::{
     bitboard::*,
     constants::{HUMAN_SQUARES, PIECE_CHARS},
-    enums::{Castling, Square},
+    defs::{Castling, Square},
     position::Position,
 };
 
@@ -46,9 +46,9 @@ fn en_passant_square<'a>(square: u8) -> &'a str {
 fn castling_rights(rights: u8) -> String {
     format!(
         "{}{}{}{}",
-        if rights & Castling::WK as u8 != 0 { "K" } else { "-" },
-        if rights & Castling::WQ as u8 != 0 { "Q" } else { "-" },
-        if rights & Castling::BK as u8 != 0 { "k" } else { "-" },
-        if rights & Castling::BQ as u8 != 0 { "q" } else { "-" },
+        if rights & Castling::WK != 0 { "K" } else { "-" },
+        if rights & Castling::WQ != 0 { "Q" } else { "-" },
+        if rights & Castling::BK != 0 { "k" } else { "-" },
+        if rights & Castling::BQ != 0 { "q" } else { "-" },
     )
 }

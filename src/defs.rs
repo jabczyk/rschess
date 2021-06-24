@@ -75,9 +75,31 @@ impl From<Piece> for Side {
 //
 // https://www.chessprogramming.org/Castling_Rights
 pub type CastlingRights = u8;
-pub enum Castling {
-    WK = 1,
-    WQ = 2,
-    BK = 4,
-    BQ = 8,
+pub struct Castling;
+impl Castling {
+    pub const WK: u8 = 1;
+    pub const WQ: u8 = 2;
+    pub const BK: u8 = 4;
+    pub const BQ: u8 = 8;
+}
+
+// This struct holds array indexes of the position bitboards
+// It is not an enum for convinience of not casting the values to usize
+pub struct Bitboard;
+impl Bitboard {
+    pub const WHITE_KING: usize = 0;
+    pub const WHITE_QUEENS: usize = 1;
+    pub const WHITE_ROOKS: usize = 2;
+    pub const WHITE_BISHOPS: usize = 3;
+    pub const WHITE_KNIGHTS: usize = 4;
+    pub const WHITE_PAWNS: usize = 5;
+    pub const BLACK_KING: usize = 6;
+    pub const BLACK_QUEENS: usize = 7;
+    pub const BLACK_ROOKS: usize = 8;
+    pub const BLACK_BISHOPS: usize = 9;
+    pub const BLACK_KNIGHTS: usize = 10;
+    pub const BLACK_PAWNS: usize = 11;
+    pub const WHITE_PIECES: usize = 12;
+    pub const BLACK_PIECES: usize = 13;
+    pub const ALL_PIECES: usize = 14;
 }

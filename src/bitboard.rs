@@ -66,7 +66,7 @@ pub fn print_bitboard(bitboard: u64) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::Square::*;
+    use crate::defs::Square::*;
 
     #[test]
     fn gets_bit() {

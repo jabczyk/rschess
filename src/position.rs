@@ -1,24 +1,6 @@
 use crate::bitboard::set_bit;
-use crate::enums::{CastlingRights, Piece, Side, Square};
+use crate::defs::{Bitboard, CastlingRights, Piece, Side, Square};
 use std::collections::HashMap;
-
-pub enum Bitboard {
-    WhiteKing,
-    WhiteQueens,
-    WhiteRooks,
-    WhiteBishops,
-    WhiteKnights,
-    WhitePawns,
-    BlackKing,
-    BlackQueens,
-    BlackRooks,
-    BlackBishops,
-    BlackKnights,
-    BlackPawns,
-    WhitePieces,
-    BlackPieces,
-    AllPieces,
-}
 
 #[derive(PartialEq, Debug)]
 pub struct Position {
@@ -51,7 +33,7 @@ impl Position {
             let side_index = Self::get_side_index(piece);
             set_bit(&mut bitboards[side_index], square as u8);
 
-            set_bit(&mut bitboards[Bitboard::AllPieces as usize], square as u8);
+            set_bit(&mut bitboards[Bitboard::ALL_PIECES], square as u8);
         }
 
         // TODO: initialize en passant square and castling rights
@@ -68,8 +50,8 @@ impl Position {
 
     fn get_side_index(piece: Piece) -> usize {
         match Side::from(piece) {
-            Side::White => Bitboard::WhitePieces as usize,
-            Side::Black => Bitboard::BlackPieces as usize,
+            Side::White => Bitboard::WHITE_PIECES,
+            Side::Black => Bitboard::BLACK_PIECES,
         }
     }
 }
@@ -89,17 +71,17 @@ mod tests {
             E8 => Piece::BlackKing
         });
 
-        verify_pos_bitboard(&position, Bitboard::WhiteKing, vec![E1]);
-        verify_pos_bitboard(&position, Bitboard::WhitePawns, vec![A2, B2]);
-        verify_pos_bitboard(&position, Bitboard::WhitePieces, vec![E1, A2, B2]);
-        verify_pos_bitboard(&position, Bitboard::BlackKing, vec![E8]);
-        verify_pos_bitboard(&position, Bitboard::BlackPieces, vec![E8]);
-        verify_pos_bitboard(&position, Bitboard::AllPieces, vec![E1, A2, B2, E8]);
+        verify_pos_bitboard(&position, Bitboard::WHITE_KING, vec![E1]);
+        verify_pos_bitboard(&position, Bitboard::WHITE_PAWNS, vec![A2, B2]);
+        verify_pos_bitboard(&position, Bitboard::WHITE_PIECES, vec![E1, A2, B2]);
+        verify_pos_bitboard(&position, Bitboard::BLACK_KING, vec![E8]);
+        verify_pos_bitboard(&position, Bitboard::BLACK_PIECES, vec![E8]);
+        verify_pos_bitboard(&position, Bitboard::ALL_PIECES, vec![E1, A2, B2, E8]);
     }
 
     #[test]
     fn gets_side_index() {
-        assert_eq!(Position::get_side_index(Piece::WhiteKing), Bitboard::WhitePieces as usize);
-        assert_eq!(Position::get_side_index(Piece::BlackKing), Bitboard::BlackPieces as usize);
+        assert_eq!(Position::get_side_index(Piece::WhiteKing), Bitboard::WHITE_PIECES);
+        assert_eq!(Position::get_side_index(Piece::BlackKing), Bitboard::BLACK_PIECES);
     }
 }

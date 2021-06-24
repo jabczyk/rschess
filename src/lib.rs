@@ -3,7 +3,7 @@
 pub mod bitboard;
 mod cli;
 pub mod constants;
-pub mod enums;
+pub mod defs;
 mod fen;
 pub mod game;
 mod macros;

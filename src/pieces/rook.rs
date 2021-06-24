@@ -1,5 +1,5 @@
 use crate::bitboard::*;
-use crate::enums::Axis;
+use crate::defs::Axis;
 
 // Creates relevant rook occupancy to use as a magic bitboard key
 // Returns a bitboard with all possible rook moves, on an empty board,
@@ -53,7 +53,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::Square::*;
+    use crate::defs::Square::*;
     use crate::test::*;
 
     mod get_occupancy {
