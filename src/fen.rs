@@ -106,3 +106,101 @@ fn get_square_id(square_str: &str) -> u8 {
 fn get_halfmoves(full_moves: u16, side_to_move: Side) -> u16 {
     (full_moves * 2) + if side_to_move == Side::Black { 1 } else { 0 }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::enums::Piece::*;
+    use crate::map;
+    use Castling::*;
+    use Square::*;
+
+    #[test]
+    fn gets_halfmoves() {
+        assert_eq!(get_halfmoves(0, Side::White), 0);
+        assert_eq!(get_halfmoves(0, Side::Black), 1);
+        assert_eq!(get_halfmoves(10, Side::White), 20);
+        assert_eq!(get_halfmoves(10, Side::Black), 21);
+    }
+
+    #[test]
+    fn gets_castling_rights() {
+        assert_eq!(get_castling_rights("-"), 0);
+        assert_eq!(get_castling_rights("KQkq"), WK as u8 | WQ as u8 | BK as u8 | BQ as u8);
+        assert_eq!(get_castling_rights("Qkq"), WQ as u8 | BK as u8 | BQ as u8);
+        assert_eq!(get_castling_rights("Kk"), WK as u8 | BK as u8);
+    }
+
+    #[test]
+    fn gets_square_id() {
+        assert_eq!(get_square_id("-"), NoSquare as u8);
+        assert_eq!(get_square_id("a1"), A1 as u8);
+        assert_eq!(get_square_id("h8"), H8 as u8);
+        assert_eq!(get_square_id("E4"), E4 as u8);
+        assert_eq!(get_square_id("4E"), NoSquare as u8);
+    }
+
+    #[test]
+    fn parses_empty_fen() {
+        assert_eq!(
+            Position::from_fen(crate::constants::EMPTY_FEN),
+            Position {
+                bitboards: [0; 15],
+                en_passant_square: NoSquare as u8,
+                castling_rights: 0,
+                side_to_move: Side::White,
+                fifty_move_count: 0,
+                halfmove_count: 2
+            }
+        );
+    }
+
+    #[test]
+    fn parses_starting_fen() {
+        assert_eq!(
+            Position::from_fen(crate::constants::STARTING_FEN),
+            Position::from_position(map! {
+                A1 => WhiteRook, H1 => WhiteRook, A8 => BlackRook, H8 => BlackRook,
+                B1 => WhiteKnight, G1 => WhiteKnight, B8 => BlackKnight, G8 => BlackKnight,
+                C1 => WhiteBishop, F1 => WhiteBishop, C8 => BlackBishop, F8 => BlackBishop,
+                D1 => WhiteQueen, D8 => BlackQueen,
+                E1 => WhiteKing, E8 => BlackKing,
+                A2 => WhitePawn, B2 => WhitePawn, C2 => WhitePawn, D2 => WhitePawn,
+                E2 => WhitePawn, F2 => WhitePawn, G2 => WhitePawn, H2 => WhitePawn,
+                A7 => BlackPawn, B7 => BlackPawn, C7 => BlackPawn, D7 => BlackPawn,
+                E7 => BlackPawn, F7 => BlackPawn, G7 => BlackPawn, H7 => BlackPawn
+            })
+        );
+    }
+
+    #[test]
+    fn parses_random_fen() {
+        let bitboards = Position::from_position(map! {
+            E1 => WhiteKing, F7 => BlackKing,
+            D2 => WhiteQueen, D6 => BlackQueen,
+            E4 => WhiteKnight, C6 => BlackKnight,
+            C1 => WhiteBishop, D7 => BlackBishop,
+            H1 => WhiteRook, B8 => BlackRook,
+            C4 => WhitePawn, B4 => BlackPawn
+        })
+        .bitboards;
+
+        assert_eq!(
+            Position::from_fen("1r6/3b1k2/2nq4/8/1pP1N3/8/3Q4/2B1K2R b K c3 1 27"),
+            Position {
+                bitboards,
+                en_passant_square: get_square_id("c3"),
+                castling_rights: WK as u8,
+                side_to_move: Side::Black,
+                fifty_move_count: 1,
+                halfmove_count: 55
+            }
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn panics_on_invalid_length_fen() {
+        Position::from_fen("one two three four five");
+    }
+}
