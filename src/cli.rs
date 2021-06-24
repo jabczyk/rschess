@@ -27,15 +27,16 @@ impl Position {
             println!();
         }
 
-        println!("   a b c d e f g h\n");
+        println!("\n   a b c d e f g h\n");
+        println!("Fifty clock: {}  Moves: {}", self.fifty_move_count, self.halfmove_count / 2);
         println!("Castling rights: {}", castling_rights(self.castling_rights));
         println!("En passant: {}", en_passant_square(self.en_passant_square));
         println!("Side to move: {}", self.side_to_move);
     }
 }
 
-fn en_passant_square<'a>(square: Square) -> &'a str {
-    if square != Square::NoSquare {
+fn en_passant_square<'a>(square: u8) -> &'a str {
+    if square != Square::NoSquare as u8 {
         HUMAN_SQUARES[square as usize]
     } else {
         "--"

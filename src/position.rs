@@ -20,9 +20,10 @@ pub enum Bitboard {
     AllPieces,
 }
 
+#[derive(PartialEq, Debug)]
 pub struct Position {
     pub bitboards: [u64; 15],
-    pub en_passant_square: Square,
+    pub en_passant_square: u8,
     pub castling_rights: CastlingRights,
     pub side_to_move: Side,
     pub fifty_move_count: u16,
@@ -33,11 +34,11 @@ impl Position {
     pub fn default() -> Self {
         Self {
             bitboards: [0; 15],
-            en_passant_square: Square::NoSquare,
+            en_passant_square: Square::NoSquare as u8,
             castling_rights: 0b1111,
             side_to_move: Side::White,
             fifty_move_count: 0,
-            halfmove_count: 0,
+            halfmove_count: 2,
         }
     }
 
@@ -57,11 +58,11 @@ impl Position {
 
         Self {
             bitboards,
-            en_passant_square: Square::NoSquare,
+            en_passant_square: Square::NoSquare as u8,
             castling_rights: 0b1111,
             side_to_move: Side::White,
             fifty_move_count: 0,
-            halfmove_count: 0,
+            halfmove_count: 2,
         }
     }
 
